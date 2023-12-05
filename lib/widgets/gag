@@ -1,0 +1,105 @@
+class InputDataBarang extends StatefulWidget {
+  @override
+  _InputDataBarangState createState() => _InputDataBarangState();
+}
+
+class _InputDataBarangState extends State<InputDataBarang> {
+  final _formKey = GlobalKey<FormState>();
+  String _selectedCategory = 'Makanan'; // Menyimpan kategori yang dipilih
+  TextEditingController _namaProdukController = TextEditingController();
+  TextEditingController _hargaController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Input Data Barang'),
+      ),
+      body: Form(
+        key: _formKey,
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            children: <Widget>[
+              TextFormField(
+                controller: _namaProdukController,
+                decoration: InputDecoration(
+                  labelText: 'Nama Produk',
+                ),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _hargaController,
+                decoration: InputDecoration(
+                  labelText: 'Harga',
+                ),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
+              ),
+              DropdownButtonFormField(
+                value: _selectedCategory,
+                onChanged: (newValue) {
+                  setState(() {
+                    _selectedCategory = newValue.toString();
+                  });
+                },
+                items: <String>['Makanan', 'Minuman', 'Lain-lain']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    // Lakukan apa pun yang diperlukan saat tombol 'Submit' ditekan,
+                    // seperti menyimpan data ke penyimpanan lokal atau database.
+                    _saveData();
+                  }
+                },
+                child: Text('Submit'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _saveData() {
+    // Lakukan apa pun yang diperlukan untuk menyimpan data
+    // Misalnya, simpan data ke penyimpanan lokal atau database.
+    String namaProduk = _namaProdukController.text;
+    String harga = _hargaController.text;
+
+    // Di sini Anda dapat menggunakan data yang sudah diambil untuk keperluan penyimpanan, misalnya:
+    // SaveDataFunction(namaProduk, harga, _selectedCategory);
+
+    // Tampilkan snackbar atau berikan umpan balik kepada pengguna.
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Data saved: $namaProduk, $harga, $_selectedCategory')),
+    );
+
+    // Bersihkan nilai input setelah disimpan
+    _namaProdukController.clear();
+    _hargaController.clear();
+    setState(() {
+      _selectedCategory = 'Makanan';
+    }
+    );
+    ItemBottomNavBar();
+    DrawerWidget();
+    
+  }
+}
